@@ -1,0 +1,118 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  padding: 8px;
+  font-family: Arial, sans-serif;
+  background: transparent;
+}
+.player {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  padding: 17px 20px;
+  border-radius: 26px;
+  background: #f7eaf6;
+  border: 1px solid #d8b8d9;
+  color: #79508d;
+}
+.music-icon {
+  display: grid;
+  place-items: center;
+  width: 58px;
+  height: 58px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: #e8d3eb;
+  font-size: 30px;
+}
+.info { flex: 1; min-width: 0; }
+.title {
+  font-size: clamp(15px, 3vw, 21px);
+  font-weight: bold;
+  margin-bottom: 7px;
+}
+.subtitle {
+  font-size: 14px;
+  color: #9a79a5;
+}
+button {
+  border: 0;
+  border-radius: 50%;
+  background: #a47ab6;
+  color: white;
+  width: 55px;
+  height: 55px;
+  flex-shrink: 0;
+  font-size: 23px;
+  cursor: pointer;
+}
+button:hover { background: #89609d; }
+@media(max-width:400px) {
+  .player { padding: 13px; gap: 10px; }
+  .music-icon { width: 45px; height: 45px; }
+  button { width: 46px; height: 46px; }
+  .subtitle { font-size: 12px; }
+}
+</style>
+</head>
+<body>
+
+<div class="player">
+  <div class="music-icon">♫</div>
+  <div class="info">
+    <div class="title">Nuestra canción especial ♡</div>
+    <div class="subtitle" id="status">
+      Presiona para escuchar la música
+    </div>
+  </div>
+  <button id="play" aria-label="Reproducir">▶</button>
+</div>
+
+<audio id="audio" preload="none">
+  <source src="musica.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+const audio = document.getElementById("audio");
+const btn = document.getElementById("play");
+const status = document.getElementById("status");
+
+btn.onclick = async () => {
+  if (audio.paused) {
+    try {
+      await audio.play();
+    } catch (e) {
+      status.textContent = "No se pudo cargar la música";
+    }
+  } else {
+    audio.pause();
+  }
+};
+
+audio.onplay = () => {
+  btn.textContent = "Ⅱ";
+  btn.setAttribute("aria-label", "Pausar");
+  status.textContent = "Reproduciendo nuestra canción ♡";
+};
+audio.onpause = () => {
+  btn.textContent = "▶";
+  btn.setAttribute("aria-label", "Reproducir");
+  status.textContent = "Presiona para escuchar la música";
+};
+audio.onended = () => {
+  audio.currentTime = 0;
+};
+audio.onerror = () => {
+  status.textContent = "No se pudo cargar la música";
+};
+</script>
+</body>
+</html>
